@@ -1,32 +1,27 @@
 import { Request, Response } from 'express';
 import { Contract } from '../models/contract';
+import { Profile } from '../models/profile'; // Import Profile model if needed
 import { Op } from 'sequelize';
+import { CustomRequest } from '../types/custom';
 
-export const getContracts = async (req: Request, res: Response) => {
+export const getContracts = async (req: CustomRequest, res: Response) => {
   const { Contract } = req.app.get('models');
-  const profileId = req.get('profile_id');
-  const contracts = await Contract.findAll({
+  const contracts: Contract[] = await Contract.findAll({
     where: {
-      [Op.or]: [{ ContractorId: profileId }, { ClientId: profileId }],
+      [Op.or]: [{ ContractorId: req.profile.id }, { ClientId: req.profile.id }],
       status: { [Op.ne]: 'terminated' }
     }
   });
   res.json(contracts);
 };
 
-export const getContractById = async (req: Request, res: Response) => {
+export const getContractById = async (req: CustomRequest, res: Response) => {
   const { Contract } = req.app.get('models');
-  const profile = req.profile as Profile;
-  const { id } = req.params;
-
-  if (!profile) {
-    return res.status(401).end();
-  }
-
+  
   const contract = await Contract.findOne({
     where: {
-      id,
-      [Op.or]: [{ ContractorId: profile.id }, { ClientId: profile.id }]
+      id: req.params.id,
+      [Op.or]: [{ ContractorId: req.profile.id }, { ClientId: req.profile.id }]
     }
   });
 
@@ -36,4 +31,3 @@ export const getContractById = async (req: Request, res: Response) => {
 
   res.json(contract);
 };
-

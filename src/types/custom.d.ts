@@ -1,7 +1,6 @@
-import { Profile } from './models/profile'; // Adjust the path as necessary
+import { Request } from 'express';
+import { Profile } from './models/profile'; // Adjust the path based on your project structure
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    profile?: Profile;
-  }
+export interface CustomRequest extends Request {
+  profile?: Profile;
 }
