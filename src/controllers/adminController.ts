@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Job } from '../models/job';
 import { Profile } from '../models/profile';
 import { Op } from 'sequelize';
+import { sequelize } from '../models/index';
 
 export const getBestProfession = async (req: Request, res: Response) => {
     const { start, end } = req.query as { start: string; end: string };
