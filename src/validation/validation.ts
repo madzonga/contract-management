@@ -11,3 +11,14 @@ export const depositBalanceSchema = Joi.object({
 export const getContractByIdSchema = Joi.object({
   id: Joi.number().integer().required()
 });
+
+export const getBestProfessionSchema = Joi.object({
+  start: Joi.date().required().label('Start Date'),
+  end: Joi.date().required().label('End Date'),
+});
+
+export const getBestClientsSchema = Joi.object({
+  start: Joi.date().required().label('Start Date'),
+  end: Joi.date().required().label('End Date'),
+  limit: Joi.number().integer().min(1).default(2).label('Limit'),
+});

@@ -15,10 +15,9 @@ Job.initialize(sequelize);
 
 // Set up associations
 Profile.hasMany(Contract, { as: 'Contractor', foreignKey: 'ContractorId' });
-Contract.belongsTo(Profile, { as: 'Contractor' });
 Profile.hasMany(Contract, { as: 'Client', foreignKey: 'ClientId' });
-Contract.belongsTo(Profile, { as: 'Client' });
 Contract.hasMany(Job, { foreignKey: 'ContractId' });
 Job.belongsTo(Contract, { foreignKey: 'ContractId' });
-
+Contract.belongsTo(Profile, { foreignKey: 'ClientId', as: 'Client' });
+Contract.belongsTo(Profile, { foreignKey: 'ContractorId', as: 'Contractor' });
 export { sequelize, Profile, Contract, Job };

@@ -1,4 +1,5 @@
 import { Sequelize, Model, DataTypes, Optional } from 'sequelize';
+import { Contract } from './contract';
 
 // Define the attributes for the Job model
 interface JobAttributes {
@@ -8,6 +9,7 @@ interface JobAttributes {
   paid: boolean;
   paymentDate: Date | null;
   ContractId: number;
+  Contract?: Contract; 
 }
 
 // Define the attributes for Job creation
@@ -21,6 +23,7 @@ class Job extends Model<JobAttributes, JobCreationAttributes> implements JobAttr
   public paid!: boolean;
   public paymentDate!: Date | null;
   public ContractId!: number;  // Add the foreign key attribute
+  public Contract?: Contract; // Association with Contract
 
   // Initialize the Job model with its attributes
   static initialize(sequelize: Sequelize) {

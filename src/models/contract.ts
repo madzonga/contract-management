@@ -1,4 +1,5 @@
 import { Sequelize, Model, DataTypes, Optional } from 'sequelize';
+import { Profile } from './profile';
 
 interface ContractAttributes {
   id: number;
@@ -6,6 +7,8 @@ interface ContractAttributes {
   status: 'new' | 'in_progress' | 'terminated';
   ClientId: number;
   ContractorId: number;
+  Client?: Profile;
+  Contractor?: Profile
 }
 
 interface ContractCreationAttributes extends Optional<ContractAttributes, 'id'> {}
@@ -16,7 +19,9 @@ class Contract extends Model<ContractAttributes, ContractCreationAttributes> imp
   public status!: 'new' | 'in_progress' | 'terminated';
   public ClientId!: number;
   public ContractorId!: number;
-
+  public Client?: Profile; // Association with Profile for Client
+  public Contractor?: Profile; // Association with Profile for Contractor
+  
   static initialize(sequelize: Sequelize) {
     Contract.init(
       {
