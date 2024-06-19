@@ -3,15 +3,15 @@ import { Profile } from '../models/profile';
 import { Job } from '../models/job';
 import { Contract } from '../models/contract';
 import { Op } from 'sequelize';
-import { sequelize } from '../models/index';
+import { withRetry } from '../database/utils';
 
 export const depositBalance = async (req: Request, res: Response) => {
   const { userId } = req.params;
   const { amount } = req.body;
 
   try {
-    await sequelize.transaction(async (trx) => {
-      const profile = await Profile.findOne({ where: { id: userId }, transaction: trx });
+    await withRetry(async (trx) => {
+      const profile = await Profile.findOne({ where: { id: userId }, transaction: trx, lock: trx.LOCK.UPDATE });
 
       if (!profile) return res.status(404).end();
 

@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { Job } from '../models/job';
 import { Op } from 'sequelize';
 import { CustomRequest } from '../types/custom';
-import { sequelize } from '../models/index';
+import { Profile, sequelize } from '../models/index';
+import { payJobSchema } from '../validation/validation';
+import { withRetry } from '../database/utils';
 
 export const getUnpaidJobs = async (req: CustomRequest, res: Response) => {
   const { Job, Contract } = req.app.get('models');
@@ -19,51 +21,86 @@ export const getUnpaidJobs = async (req: CustomRequest, res: Response) => {
 };
 
 
+// export const payJob = async (req: Request, res: Response) => {
+//   const { Job, Profile, Contract } = req.app.get('models');
+//   const { job_id } = req.params;
+
+//   const trx = await sequelize.transaction();
+
+//   try {
+//     // const { error } = payJobSchema.validate({ job_id });
+
+//     // if (error) {
+//     //   return res.status(400).json({ message: error.details[0].message });
+//     // }
+    
+//     const job = await Job.findOne({
+//       where: { id: job_id },
+//       include: [{ model: Contract }],
+//       transaction: trx,
+//       lock: trx.LOCK.UPDATE // this is to ensure the row is locked for update to prevent race conditions
+//     });
+
+//     if (!job) return res.status(404).end();
+//     if (job.paid) return res.status(400).json({ message: 'Job is already paid' });
+
+//     const client: Profile = await Profile.findOne({ where: { id: job.Contract.ClientId }, transaction: trx, lock: trx.LOCK.UPDATE });
+//     const contractor: Profile = await Profile.findOne({ where: { id: job.Contract.ContractorId }, transaction: trx, lock: trx.LOCK.UPDATE });
+
+//     if (!client || !contractor) return res.status(404).json({ message: 'Client or Contractor not found' });
+
+//     if (client.balance < job.price) return res.status(400).json({ message: 'Insufficient balance' });
+
+//     await Promise.all([
+//       // These updates are initiated concurrently
+//       client.update({ balance: client.balance - job.price }, { transaction: trx }),
+//       contractor.update({ balance: contractor.balance + job.price }, { transaction: trx }),
+//       job.update({ paid: true, paymentDate: new Date() }, { transaction: trx })
+//     ]);
+
+//     await trx.commit();
+//     res.json(job);
+//   } catch (error) {
+//     await trx.rollback();
+//     res.status(500).json({ message: 'Error paying job', error: (error as Error).message });
+//   }
+// };
+
+
 export const payJob = async (req: Request, res: Response) => {
+  const { Job, Profile, Contract } = req.app.get('models');
   const { job_id } = req.params;
-
+  
   try {
-    await sequelize.transaction(async (trx) => {
-      const { Job, Profile, Contract } = req.app.get('models');
-
-      // Find the job within the transaction
+    await withRetry(async (trx) => {
       const job = await Job.findOne({
         where: { id: job_id },
-        include: [{ model: Contract }]
+        include: [{ model: Contract }],
+        transaction: trx,
+        lock: trx.LOCK.UPDATE // Ensure the row is locked for update to prevent race conditions
       });
 
       if (!job) return res.status(404).end();
       if (job.paid) return res.status(400).json({ message: 'Job is already paid' });
 
-      // Find client and contractor profiles
-      const client = await Profile.findOne({ where: { id: job.Contract.ClientId } }, { transaction: trx });
-      const contractor = await Profile.findOne({ where: { id: job.Contract.ContractorId } }, { transaction: trx });
+      const client = await Profile.findOne({ where: { id: job.Contract.ClientId }, transaction: trx, lock: trx.LOCK.UPDATE });
+      const contractor = await Profile.findOne({ where: { id: job.Contract.ContractorId }, transaction: trx, lock: trx.LOCK.UPDATE });
 
-      if (!client || !contractor) {
-        return res.status(404).json({ message: 'Client or contractor not found' });
-      }
+      if (client.balance < job.price) return res.status(400).json({ message: 'Insufficient balance' });
 
-      if (client.balance < job.price) {
-        return res.status(400).json({ message: 'Insufficient balance' });
-      }
-
-      // Perform balance transactions
       client.balance -= job.price;
       contractor.balance += job.price;
 
-      // Save updated balances
-      await client.save({ transaction: trx });
-      await contractor.save({ transaction: trx });
-
-      // Mark job as paid and set payment date
-      job.paid = true;
-      job.paymentDate = new Date();
-      await job.save({ transaction: trx });
+      await Promise.all([
+        client.save({ transaction: trx }),
+        contractor.save({ transaction: trx }),
+        job.update({ paid: true, paymentDate: new Date() }, { transaction: trx })
+      ]);
 
       res.json(job);
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error paying job:', error);
-    res.status(500).json({ message: 'Error paying job', error: error.message });
+    res.status(500).json({ message: 'Error paying job', error: (error as Error).message });
   }
 };
