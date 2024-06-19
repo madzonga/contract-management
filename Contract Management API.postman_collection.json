@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "f2cd17fb-20c4-487b-a117-0f0e8352c654",
+		"name": "Contract Management API",
+		"description": "API for managing contracts, jobs, and profiles",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9048881"
+	},
+	"item": [
+		{
+			"name": "Contracts",
+			"item": [
+				{
+					"name": "Get Contracts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "profile_id",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3001/contracts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"contracts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contract By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "profile_id",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3001/contracts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"contracts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Jobs",
+			"item": [
+				{
+					"name": "Get Unpaid Jobs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "profile_id",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3001/jobs/unpaid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"jobs",
+								"unpaid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay for Job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "profile_id",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3001/jobs/:job_id/pay",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"jobs",
+								":job_id",
+								"pay"
+							],
+							"variable": [
+								{
+									"key": "job_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Balances",
+			"item": [
+				{
+					"name": "Deposit Balance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "profile_id",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/balances/deposit/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"balances",
+								"deposit",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get Best Profession",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/admin/best-profession?start=2021-01-01&end=2021-12-31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"admin",
+								"best-profession"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "2021-01-01"
+								},
+								{
+									"key": "end",
+									"value": "2021-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Best Clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/admin/best-clients?start=2021-01-01&end=2021-12-31&limit=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"admin",
+								"best-clients"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "2021-01-01"
+								},
+								{
+									"key": "end",
+									"value": "2021-12-31"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
