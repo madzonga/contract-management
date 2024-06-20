@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Profile } from './models/profile'; // Adjust the path based on your project structure
+import { Profile } from './models/profile'; 
 
 export interface CustomRequest extends Request {
   profile?: Profile;

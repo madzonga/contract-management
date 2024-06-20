@@ -20,53 +20,6 @@ export const getUnpaidJobs = async (req: CustomRequest, res: Response) => {
   res.json(jobs);
 };
 
-
-// export const payJob = async (req: Request, res: Response) => {
-//   const { Job, Profile, Contract } = req.app.get('models');
-//   const { job_id } = req.params;
-
-//   const trx = await sequelize.transaction();
-
-//   try {
-//     // const { error } = payJobSchema.validate({ job_id });
-
-//     // if (error) {
-//     //   return res.status(400).json({ message: error.details[0].message });
-//     // }
-    
-//     const job = await Job.findOne({
-//       where: { id: job_id },
-//       include: [{ model: Contract }],
-//       transaction: trx,
-//       lock: trx.LOCK.UPDATE // this is to ensure the row is locked for update to prevent race conditions
-//     });
-
-//     if (!job) return res.status(404).end();
-//     if (job.paid) return res.status(400).json({ message: 'Job is already paid' });
-
-//     const client: Profile = await Profile.findOne({ where: { id: job.Contract.ClientId }, transaction: trx, lock: trx.LOCK.UPDATE });
-//     const contractor: Profile = await Profile.findOne({ where: { id: job.Contract.ContractorId }, transaction: trx, lock: trx.LOCK.UPDATE });
-
-//     if (!client || !contractor) return res.status(404).json({ message: 'Client or Contractor not found' });
-
-//     if (client.balance < job.price) return res.status(400).json({ message: 'Insufficient balance' });
-
-//     await Promise.all([
-//       // These updates are initiated concurrently
-//       client.update({ balance: client.balance - job.price }, { transaction: trx }),
-//       contractor.update({ balance: contractor.balance + job.price }, { transaction: trx }),
-//       job.update({ paid: true, paymentDate: new Date() }, { transaction: trx })
-//     ]);
-
-//     await trx.commit();
-//     res.json(job);
-//   } catch (error) {
-//     await trx.rollback();
-//     res.status(500).json({ message: 'Error paying job', error: (error as Error).message });
-//   }
-// };
-
-
 export const payJob = async (req: Request, res: Response) => {
   const { Job, Profile, Contract } = req.app.get('models');
   const { job_id } = req.params;

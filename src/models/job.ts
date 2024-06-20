@@ -22,8 +22,8 @@ class Job extends Model<JobAttributes, JobCreationAttributes> implements JobAttr
   public price!: number;
   public paid!: boolean;
   public paymentDate!: Date | null;
-  public ContractId!: number;  // Add the foreign key attribute
-  public Contract?: Contract; // Association with Contract
+  public ContractId!: number; 
+  public Contract?: Contract; 
 
   // Initialize the Job model with its attributes
   static initialize(sequelize: Sequelize) {
@@ -50,7 +50,7 @@ class Job extends Model<JobAttributes, JobCreationAttributes> implements JobAttr
           type: DataTypes.DATE,
           allowNull: true,
         },
-        ContractId: {  // Add the foreign key attribute definition
+        ContractId: {  
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
         },

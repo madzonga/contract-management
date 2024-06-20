@@ -23,8 +23,8 @@ Before you begin, ensure you have met the following requirements:
 ## Running the Scripts
 
 1. Run `npm run seed` to seed the database before running the app.
-2. Run `npm run start` to start the app.
-3. Run `npm run test` to run the tests.
+2. Run `npm start` to start the app.
+3. Run `npm test` to run the tests.
 
 ## Usage
 

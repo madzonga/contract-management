@@ -34,49 +34,6 @@ describe('Jobs Controller', () => {
   });
 
   describe('POST /jobs/:job_id/pay', () => {
-    // it('should pay the job', async () => {
-    //   const mockJob = {
-    //     id: 1,
-    //     price: 200,
-    //     paid: false,
-    //     Contract: { ClientId: 1, ContractorId: 2 } as unknown as Contract
-    //   } as unknown as Job;
-    //   const mockClient = { id: 1, balance: 500, save: sinon.stub().resolves() } as unknown as Profile;
-    //   const mockContractor = { id: 2, balance: 200, save: sinon.stub().resolves() } as unknown as Profile;
-
-    //   sandbox.stub(Job, 'findOne').resolves(mockJob);
-    //   sandbox.stub(Profile, 'findOne').onFirstCall().resolves(mockClient).onSecondCall().resolves(mockContractor);
-
-    //   const transactionStub = sandbox.stub(sequelize, 'transaction').callsFake(async (arg1: any, arg2?: any) => {
-    //     const trx = {
-    //       commit: sinon.stub().resolves(),
-    //       rollback: sinon.stub().resolves(),
-    //       LOCK: {
-    //         UPDATE: 'UPDATE'
-    //       }
-    //     } as unknown as Transaction;
-
-    //     if (typeof arg1 === 'function') {
-    //       await arg1(trx);
-    //     } else if (typeof arg2 === 'function') {
-    //       await arg2(trx);
-    //     }
-
-    //     return trx;
-    //   });
-
-    //   const res = await request
-    //   .post('/jobs/1/pay')
-    //   .set('profile_id', '1')
-    //   .query({ job_id: 1 })  // Adjusted to pass job_id as query parameter
-    //   .expect(200);
-
-    //   expect(res.body.paid).to.be.true;
-    //   expect((mockClient.save as sinon.SinonStub).calledOnce).to.be.true;
-    //   expect((mockContractor.save  as sinon.SinonStub).calledOnce).to.be.true;
-    //   expect(transactionStub.calledOnce).to.be.true;
-    // });
-
     it('should return 404 if job not found', async () => {
       sandbox.stub(Job, 'findOne').resolves(null);
 

@@ -4,7 +4,7 @@ import { Transaction } from 'sequelize';
 import { sequelize } from '../models';
 import { withRetry } from '../database/utils';
 
-describe.only('withRetry', () => {
+describe('withRetry', () => {
   let sandbox: sinon.SinonSandbox;
   let transactionStub: sinon.SinonStub;
   let commitStub: sinon.SinonStub;

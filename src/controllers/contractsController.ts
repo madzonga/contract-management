@@ -1,6 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Contract } from '../models/contract';
-import { Profile } from '../models/profile'; // Import Profile model if needed
 import { Op } from 'sequelize';
 import { CustomRequest } from '../types/custom';
 

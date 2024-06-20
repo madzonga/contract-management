@@ -1,7 +1,7 @@
 import { Profile } from '../src/models/profile';
 import { Contract } from '../src/models/contract';
 import { Job } from '../src/models/job';
-import { sequelize } from '../src/models/index'; // Adjust the path as per your project structure
+import { sequelize } from '../src/models/index';
 
 /* WARNING THIS WILL DROP THE CURRENT DATABASE */
 
