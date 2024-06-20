@@ -46,9 +46,6 @@ export const getBestClients = async (req: Request, res: Response) => {
     const bestClients = await Job.findAll({
       attributes: [
         [sequelize.fn('sum', sequelize.col('price')), 'total_paid'],
-        'Contract.Client.id',
-        'Contract.Client.firstName',
-        'Contract.Client.lastName',
       ],
       include: [{ model: Contract, as: 'Contract', include: [{ model: Profile, as: 'Client' }] }],
       where: {
@@ -65,11 +62,15 @@ export const getBestClients = async (req: Request, res: Response) => {
     if (!bestClients || bestClients.length === 0) {
       return res.status(404).json({ message: 'No clients found in the given date range' });
     }
-    const formattedClients = bestClients.map((job: any) => ({
-      id: job.Contract.Client.id,
-      fullName: `${job.Contract.Client.firstName} ${job.Contract.Client.lastName}`,
-      paid: job.dataValues.total_paid,
-    }));
+
+    const formattedClients = bestClients.map((job: any) => {
+      const totalPaid = job.getDataValue('total_paid');
+      return {
+        id: job.Contract.Client.id,
+        fullName: `${job.Contract.Client.firstName} ${job.Contract.Client.lastName}`,
+        paid: totalPaid,
+      };
+    });
 
     res.json(formattedClients);
   } catch (error) {
