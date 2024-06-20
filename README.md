@@ -29,3 +29,7 @@ Before you begin, ensure you have met the following requirements:
 ## Usage
 
 After installing the dependencies and running the necessary scripts, you can interact with the application through the available API endpoints. Import the `Contract Management API.postman_collection.json` into Postman.
+
+## Extra features added
+
+- Unit tests for each endpoint and some helper functions.
