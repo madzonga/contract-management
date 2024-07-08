@@ -1,4 +1,4 @@
-# Deel Home Challenge
+# Contract Management
 
 ## Introduction
 
